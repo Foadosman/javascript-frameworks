@@ -5,20 +5,41 @@ import type { Product } from '../types/Product';
 function ProductDetails() {
     const { id } = useParams();
     const [product, setProduct] = useState<Product | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    
     useEffect(() => {
         async function fetchProduct() {
-            const response = await fetch(
-                `https://v2.api.noroff.dev/online-shop/${id}`
-            );
+            try {
+                const response = await fetch(
+                    `https://v2.api.noroff.dev/online-shop/${id}`
+                );
 
-            const result = await response.json();
-            setProduct(result.data);
+                if (!response.ok) {
+                    throw new Error('Coult not fetch product');
+                }
+
+                const result = await response.json();
+                setProduct(result.data);
+            } catch (error) {
+                if (error instanceof Error) {
+                    setError(error.message);
+                }
+            }   finally {
+                setLoading(false);
+            }
         }
 
         fetchProduct();
     }, [id]);
+    if (loading) {
+        return <p>Loading product</p>;
+    }
+    if (error) {
+        return <p>Error: {error}</p>;
+    }
     if (!product) {
-        return <p>Loading product</p>
+        return <p>Product not found.</p>;
     }
     return (
         <section>
@@ -31,6 +52,18 @@ function ProductDetails() {
                     <h3>Tags</h3>
                     {product.tags.map((tag) => (
                         <span key={tag}>{tag}</span>
+                    ))}
+                </div>
+            )}
+            {product.reviews && product.reviews.length > 0 && (
+                <div>
+                    <h3>Reviews</h3>
+                    {product.reviews.map((review) => (
+                        <div key={review.id}>
+                            <p>{review.username}</p>
+                            <p>Rating: {review.rating} / 5</p>
+                            <p>{review.description}</p>
+                        </div>
                     ))}
                 </div>
             )}
