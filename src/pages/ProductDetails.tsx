@@ -1,12 +1,14 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import type { Product } from '../types/Product';
+import { useCartStore } from '../stores/cartStore';
 
 function ProductDetails() {
     const { id } = useParams();
     const [product, setProduct] = useState<Product | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
+    const addItem = useCartStore((state) => state.addItem);
     
     useEffect(() => {
         async function fetchProduct() {
@@ -75,6 +77,14 @@ function ProductDetails() {
             ) : (
                 <p>{product.price} kr</p>
             )}
+
+            <button onClick={() => addItem({
+                productId: product.id,
+                title: product.title,
+                price: product.discountedPrice
+            })}>
+                Add to cart
+            </button>
         </section>
     );
 }
