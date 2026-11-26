@@ -23,18 +23,18 @@ function ProductList() {
 
     const sortedProducts = [...filteredProducts];
         if (sort === 'price-low') {
-            sortedProducts.sort((a, b) => a.price - b.price);
+            sortedProducts.sort((a, b) => a.discountedPrice - b.discountedPrice);
         }
 
         else if (sort === 'price-high') {
-            sortedProducts.sort((a, b) => b.price - a.price);
+            sortedProducts.sort((a, b) => b.discountedPrice - a.discountedPrice);
         }
 
         else if (sort === 'name') {
             sortedProducts.sort((a, b) => a.title.localeCompare(b.title));
         }
 
-        
+
 
     return (
         <section>

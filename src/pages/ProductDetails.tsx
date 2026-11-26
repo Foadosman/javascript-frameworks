@@ -9,6 +9,8 @@ function ProductDetails() {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const addItem = useCartStore((state) => state.addItem);
+    const [showToast, setShowToast] = useState(false);
+
     
     useEffect(() => {
         async function fetchProduct() {
@@ -43,6 +45,20 @@ function ProductDetails() {
     if (!product) {
         return <p>Product not found.</p>;
     }
+
+    const handleAddToCart = () => {
+        addItem({
+            productId: product.id,
+            title: product.title,
+            price: product.discountedPrice
+        });
+        setShowToast(true);
+
+        setTimeout(() => {
+            setShowToast(false);
+        }, 4000);
+    };
+
     return (
         <section>
             <h2>Product Details</h2>
@@ -78,13 +94,8 @@ function ProductDetails() {
                 <p>{product.price} kr</p>
             )}
 
-            <button onClick={() => addItem({
-                productId: product.id,
-                title: product.title,
-                price: product.discountedPrice
-            })}>
-                Add to cart
-            </button>
+            <button onClick={handleAddToCart}>Add to Cart</button>
+            {showToast && <p>Product added to cart!</p>}
         </section>
     );
 }

@@ -1,4 +1,6 @@
 import { useCartStore } from '../stores/cartStore';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 function Cart() {
     const items = useCartStore((state) => state.items);
@@ -9,10 +11,35 @@ function Cart() {
         const productPrice = item.price;
         return total + (item.quantity * productPrice);
     }, 0);
+    const navigate = useNavigate();
+    const [showToast, setShowToast] = useState(false);
+    const clearCart = useCartStore((state) => state.clearCart);
+    const handleCheckout = () => {
+        clearCart();
+        navigate('/checkout-success');
+    };
+    const handleRemoveItem = (productId: string) => {
+        removeItem(productId);
+        setShowToast(true);
+
+        setTimeout(() => {
+            setShowToast(false);
+        }, 4000);
+    }
+
+    if (items.length === 0) {
+        return(
+            <section>
+                {showToast && <p>Product removed form cart!</p>}
+                <p>Your cat is empty.</p>
+            </section> 
+        );
+    }
 
     return (
         <section>
             <h2>Shopping Cart</h2>
+            {showToast && <p>Product removed from cart!</p>}
             <p>Total items: {totalItems}</p>
             <ul>
                 {items.map((item) => (
@@ -26,13 +53,14 @@ function Cart() {
                         <button onClick={() => updateQuantity(item.productId, item.quantity + 1)}>
                             +
                         </button>
-                        <button onClick={() => removeItem(item.productId)}>
+                        <button onClick={() => handleRemoveItem(item.productId)}>
                             Remove
                         </button>
                     </li>
                 ))}
             </ul>
             <p>Total Price: <strong>{totalPrice} kr</strong></p>
+            <button onClick={handleCheckout}>Checkout</button>
         </section>
     );
 }
