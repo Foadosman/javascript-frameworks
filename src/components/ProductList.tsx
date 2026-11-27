@@ -1,21 +1,42 @@
 import { useEffect, useState } from 'react';
-import type { Product } from '../types/Product';
+import type { Product, ApiResponse } from '../types/Product';
 import {Link} from 'react-router-dom';
 
 function ProductList() {
     const [products, setProducts] = useState<Product[]>([]);
     const [search, setSearch] = useState('');
     const [sort, setSort] = useState('default');
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+
     useEffect(() => {
         async function fetchProducts() {
-            const response = await fetch('https://v2.api.noroff.dev/online-shop');
-            const result = await response.json();
-
-            setProducts(result.data);
+            try{
+                setLoading(true);
+                setError(null);
+                const response = await fetch('https://v2.api.noroff.dev/online-shop');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const result: ApiResponse = await response.json();
+                setProducts(result.data);
+            } catch (error) {
+                if (error instanceof Error) {
+                    setError(error.message);
+                } else {
+                    setError('An unkown error occurred');
+                }
+            }
+            finally {
+                setLoading(false);
+            }
         }
 
         fetchProducts();
     }, []);
+
+    if (loading) return <p>Loading products...</p>;
+    if (error) return <p>Error loading products: {error}</p>;
 
     const filteredProducts = products.filter((product) =>
             product.title.toLowerCase().includes(search.trim().toLowerCase())
@@ -45,11 +66,6 @@ function ProductList() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
             />
-            {search.trim() !== '' && (
-                <div className="search-suggestions">
-                    <p>Search suggestions</p>
-                </div>
-            )}
             
             <select
                 value={sort}

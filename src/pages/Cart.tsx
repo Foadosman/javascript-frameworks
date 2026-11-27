@@ -30,8 +30,8 @@ function Cart() {
     if (items.length === 0) {
         return(
             <section>
-                {showToast && <p>Product removed form cart!</p>}
-                <p>Your cat is empty.</p>
+                {showToast && <p>Product removed from cart!</p>}
+                <p>Your cart is empty.</p>
             </section> 
         );
     }
@@ -47,7 +47,13 @@ function Cart() {
                         <h3>{item.title}</h3>
                         <p>Price: {item.price} kr:</p>
                         <p>Quantity: {item.quantity}</p>
-                        <button onClick={() => updateQuantity(item.productId, item.quantity - 1)}>
+                        <button onClick={() => {
+                            if (item.quantity === 1) {
+                                handleRemoveItem(item.productId);
+                            } else {
+                                updateQuantity(item.productId, item.quantity - 1);
+                            }
+                        }}>
                             -
                         </button>
                         <button onClick={() => updateQuantity(item.productId, item.quantity + 1)}>

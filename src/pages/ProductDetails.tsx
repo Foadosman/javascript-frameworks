@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import type { Product } from '../types/Product';
+import type { Product, SingleProductApiResponse } from '../types/Product';
 import { useCartStore } from '../stores/cartStore';
 
 function ProductDetails() {
@@ -20,10 +20,10 @@ function ProductDetails() {
                 );
 
                 if (!response.ok) {
-                    throw new Error('Coult not fetch product');
+                    throw new Error('Could not fetch product');
                 }
 
-                const result = await response.json();
+                const result: SingleProductApiResponse = await response.json();
                 setProduct(result.data);
             } catch (error) {
                 if (error instanceof Error) {

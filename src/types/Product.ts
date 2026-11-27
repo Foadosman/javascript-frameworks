@@ -19,3 +19,11 @@ export type Product = {
     tags: string[];
     reviews?: Review[];
 };
+
+export interface ApiResponse {
+    data: Product[];
+}
+
+export interface SingleProductApiResponse {
+    data: Product;
+}
