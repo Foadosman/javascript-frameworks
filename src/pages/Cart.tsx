@@ -68,7 +68,7 @@ function Cart() {
                 ))}
             </ul>
             <div className="cart-summary">
-            <p>Total Price: <strong>{totalPrice} kr</strong></p>
+            <p>Total Price: <strong>{totalPrice.toFixed(2)} kr</strong></p>
             <button className="checkout-button" onClick={handleCheckout}>Checkout</button>
             </div>
         </section>

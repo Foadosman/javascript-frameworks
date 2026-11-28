@@ -96,12 +96,14 @@ function ProductList() {
                                 )}% OFF
                             </span>
                         )}
+                        <Link to={`/products/${product.id}`}>
                         <img
                         className="product-image"
                         src={product.image.url}
                         alt={product.image.alt}
                         />
-                        <Link to={`/products/${product.id}`}>
+                        </Link>
+                        <Link to={`/products/${product.id}`} className="product-title">
                             <h3>{product.title}</h3>
                         </Link>
                         <div className="product-rating">
