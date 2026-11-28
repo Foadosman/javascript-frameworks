@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import type { Product, SingleProductApiResponse } from '../types/Product';
 import { useCartStore } from '../stores/cartStore';
+import { Star, ShoppingBag } from 'lucide-react';
 
 function ProductDetails() {
     const { id } = useParams();
@@ -60,24 +61,51 @@ function ProductDetails() {
     };
 
     return (
-        <section>
-            <h2>Product Details</h2>
-            <img src={product.image.url} alt={product.image.alt} width="300" />
-            <h3>{product.title}</h3>
-            <p>{product.description}</p>
+        <section className="product-details">
+            <div className="product-details-layout">
+                <div className="product-details-image-container">
+                {product.discountedPrice < product.price && (
+                    <span className="discount-badge">
+                        {Math.round(((product.price - product.discountedPrice) / product.price) * 100)}% OFF
+                    </span>
+                )}
+            <img className="product-details-image" src={product.image.url} alt={product.image.alt} />
+            </div>
+            <div className="product-details-info">
+            <h2>{product.title}</h2>
+            <div className="product-rating">
+                <Star size={16} fill="#b99543" color="#b99543" />
+                <span>{product.rating} / 5</span>
+            </div>
+            <p className="product-description">{product.description}</p>
             {product.tags.length > 0 && (
-                <div>
+                <div className="product-tags">
                     <h3>Tags</h3>
                     {product.tags.map((tag) => (
                         <span key={tag}>{tag}</span>
                     ))}
                 </div>
             )}
+            {product.discountedPrice < product.price ? (
+                <div className="product-prices">
+                    <p className="original-price"><del>{product.price} kr</del></p>
+                    <p className="discounted-price">{product.discountedPrice} kr</p>
+                </div>
+            ) : (
+                <p className="product-price">{product.price} kr</p>
+            )}
+
+            <button className="add-to-cart-button" onClick={handleAddToCart}>
+                <ShoppingBag size={20} />
+                Add to Cart</button>
+            </div>
+            </div>
+            
             {product.reviews && product.reviews.length > 0 && (
-                <div>
+                <div className="product-reviews">
                     <h3>Reviews</h3>
                     {product.reviews.map((review) => (
-                        <div key={review.id}>
+                        <div key={review.id} className="review-card">
                             <p>{review.username}</p>
                             <p>Rating: {review.rating} / 5</p>
                             <p>{review.description}</p>
@@ -85,17 +113,7 @@ function ProductDetails() {
                     ))}
                 </div>
             )}
-            {product.discountedPrice < product.price ? (
-                <div>
-                    <p><del>{product.price} kr</del></p>
-                    <p>{product.discountedPrice} kr</p>
-                </div>
-            ) : (
-                <p>{product.price} kr</p>
-            )}
-
-            <button onClick={handleAddToCart}>Add to Cart</button>
-            {showToast && <p>Product added to cart!</p>}
+            {showToast && <p className="toast">Product added to cart!</p>}
         </section>
     );
 }

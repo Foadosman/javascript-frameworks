@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { Product, ApiResponse } from '../types/Product';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { Star, Search } from 'lucide-react';
 
 function ProductList() {
     const [products, setProducts] = useState<Product[]>([]);
@@ -24,7 +25,7 @@ function ProductList() {
                 if (error instanceof Error) {
                     setError(error.message);
                 } else {
-                    setError('An unkown error occurred');
+                    setError('An unknown error occurred');
                 }
             }
             finally {
@@ -58,53 +59,64 @@ function ProductList() {
 
 
     return (
-        <section>
-            <h2>Products</h2>
-            <input
-                type="text"
-                placeholder="Search products..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-            />
-            
-            <select
-                value={sort}
-                onChange={(e) => setSort(e.target.value)}
-            >
-                <option value="default">Default sorting</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to low</option>
-                <option value="name">Name: A to Z</option>
-            </select>
+        <section className="products-section">
+            <h2 className="products-heading">Products</h2>
+
+            <div className="product-controls">
+                <div className="search-container">
+                    <Search size={20} className="search-icon" />
+                    <input
+                        className="product-search"
+                        type="text"
+                        placeholder="Search products..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+                </div>
+                    
+                <select
+                    className="product-sort"
+                    value={sort}
+                    onChange={(e) => setSort(e.target.value)}
+                >
+                    <option value="default">Default sorting</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to low</option>
+                    <option value="name">Name: A to Z</option>
+                </select>
+            </div>
             
             <div className="product-grid">
                 {sortedProducts.map((product) => (
                     <div key={product.id} className="product-card">
                         {product.discountedPrice < product.price && (
-                            <span>
+                            <span className="discount-badge">
                                 {Math.round(
                                     ((product.price - product.discountedPrice) / product.price) * 100
                                 )}% OFF
                             </span>
                         )}
                         <img
+                        className="product-image"
                         src={product.image.url}
                         alt={product.image.alt}
-                        width="200"
                         />
                         <Link to={`/products/${product.id}`}>
                             <h3>{product.title}</h3>
                         </Link>
-                        <p>Rating: {product.rating} / 5</p>
+                        <div className="product-rating">
+                            <Star size={16} fill="#b99543" color="#b99543" />
+                            <span>{product.rating} / 5</span>
+                        </div>
                         {product.discountedPrice < product.price ? (
-                            <div>
-                                <p>
+                            <div className="product-prices">
+                                <p className="original-price">
                                     <del>{product.price} kr</del>
                                 </p>
-                                <p>{product.discountedPrice} kr</p>
+                                <p className="discounted-price">{product.discountedPrice} kr</p>
                             </div>
                         ) : (
-                            <p>{product.price} kr</p>
+                            <p className="product-price">{product.price} kr</p>
                         )}
                     </div>
                 ))}

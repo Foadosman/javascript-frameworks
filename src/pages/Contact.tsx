@@ -54,9 +54,9 @@ function Contact() {
 
     
     return (
-        <section>
+        <section className="contact-section">
             <h2>Contact us</h2>
-            <form onSubmit={handleSubmit}>
+            <form className="contact-form" onSubmit={handleSubmit}>
                 <label htmlFor="fullName">Full name</label>
                 <input type="text" id="fullName" value={fullName} onChange={handleFullNameChange}/>
 
