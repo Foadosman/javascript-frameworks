@@ -8,7 +8,7 @@ The application allows users to browse, search and sort products, view product d
 
 ## Live Demo
 
-[View live website](noroff-react-shop.netlify.app)
+[View live website](https://noroff-react-shop.netlify.app/)
 
 ## Features
 
