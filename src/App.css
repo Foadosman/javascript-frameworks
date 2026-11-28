@@ -385,7 +385,7 @@
   margin: 60px auto;
   padding: 40px 32px;
   background-color: #ffffff;
-  border: 1px solif #e5e2dc;
+  border: 1px solid #e5e2dc;
   border-radius: 8px;
   text-align: center;
 }
@@ -540,7 +540,7 @@
     font-size: 28px;
   }
 
-  .procuct-reviews h3 {
+  .product-reviews h3 {
     font-size: 24px;
   }
 
